@@ -38,3 +38,8 @@ print 'Processing...'
 new_chain = chain_rep(seq[start_pos:],old_trip,new_trip)
 
 print new_chain
+
+fname = "new_chain.txt"
+file = open(fname, 'w')
+file.write(new_chain)
+file.close()
