@@ -2,52 +2,64 @@
 
 
 import numpy as np
-import matplotlib as mp
-import math
 
 # https://math.stackexchange.com/questions/920351/selecting-at-least-one-ball-of-each-color
- 
-def nCr(n,r):
-    f = math.factorial
-    return f(n) / f(r) / f(n-r)
- 
+# https://en.wikipedia.org/wiki/Hypergeometric_distribution
+from pymc import multivariate_hypergeometric_like
+
+def multichoose(n,k):
+    if k < 0 or n < 0: return "Error"
+    if not k: return [[0]*n]
+    if not n: return []
+    if n == 1: return [[k]]
+    return [[0]+val for val in multichoose(n-1,k)] + \
+        [[val[0]+1]+val[1:] for val in multichoose(n,k-1)]
+
+def remove_comb(list_):
+    
+    x2 = list_[:]
+
+    for m in list_:
+        for z in m:
+            if z == 0 or (1 not in m):
+                x2.remove(m)
+                break
+    return x2
+
 #main
  
 p = input('Tell me the probability you want to ensure in %: \n')
 x = input('Tell me the number of mutations: \n')
-n = input('Tell me the number of choices: \n')
+n = input('Tell me the number of elements in total (1000?): \n')
 
-p = 0.95
-prob = 0
-x = 3
-n = 50
-a = x #unknown
+num_ele = np.floor((n/x)) #number of elements x set
 
-num_ele = np.floor((n/x))
+ele_set  = np.ones(x)*num_ele #elements x set fixed
+unk_set = np.ones(x) #unknown set start
+
+a=0 # unknown - starts in x
+cum_prob = 0
 
 
-while prob<p:
-  
-    # total number of combinations
-    comb_tot = nCr(num_ele*x,a)
-    # combinations without 1 ball
-    comb_sum = nCr(num_ele,a)*x
-    # combinations without 2 ball
-    comb_min = nCr(np.floor((n/(x-2))),a)*x
+while cum_prob<p:
     
-    prob = 1 - (comb_sum - comb_min)/comb_tot
+    all_comb = multichoose(x,a)
+    our_comb=remove_comb(all_comb)
+
+    for comb in our_comb:
+        if not comb:
+            break
+        
+        log_like=multivariate_hypergeometric_like(comb, ele_set)
+        prob_one_comb=np.e**log_like
+        
+        cum_prob += prob_one_comb
+    
+    
     a += 1
-    
+    print a, cum_prob
+  
+
+  
 print a
-   
-   
-import pymc
-from pymc import multivariate_hypergeometric_like
 
-pymc.distributions.multivariate_hypergeometric_like
-
-a=multivariate_hypergeometric_like([2, 2], [3,3])
-e**a
- 
- 
- 
