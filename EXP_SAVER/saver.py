@@ -2,51 +2,52 @@
 
 
 import numpy as np
-import scipy
-import matcompat
+import matplotlib as mp
+import math
 
-# if available import pylab (from matlibplot)
-try:
-    import matplotlib.pylab as plt
-except ImportError:
-    pass
+# https://math.stackexchange.com/questions/920351/selecting-at-least-one-ball-of-each-color
+ 
+def nCr(n,r):
+    f = math.factorial
+    return f(n) / f(r) / f(n-r)
+ 
+#main
+ 
+p = input('Tell me the probability you want to ensure in %: \n')
+x = input('Tell me the number of mutations: \n')
+n = input('Tell me the number of choices: \n')
 
-#clear(all)
-#plt.close(all)
-#clc
+p = 0.95
+prob = 0
+x = 3
+n = 50
+a = x #unknown
+
+num_ele = np.floor((n/x))
 
 
-th0 = 0.95
-Nmax = 15.
-index = np.zeros(Nmax, 1.)
-ratio = np.zeros(Nmax, 1.)
-for N in np.arange(1., (Nmax)+1):
-    zmax = 1000.*Nmax
-    #% max number of tries
-    th = np.dot(th0, zmax)
-    output = np.zeros(zmax, 1.)
-    for z in np.arange(1., (zmax)+1):
-        counter = np.ones(N, 1.)
-        cont = 0.
-        I = 1.
-        while I != 0.:
-            i = np.floor((np.random.rand(1., 1.)*N+1.))
-            #% choose one ball
-            cont = cont+1.
-            counter[int(i)-1] = 0.
-            I = nonzero(counter)
-            
-        output[int(z)-1,0] = cont
-        
-    [freq, X] = plt.hist(output, matcompat.max(output))
-    c = np.cumsum(freq)
-    maxc = matcompat.max(c)
-    probs.cell[int(N)-1] = c/matcompat.max(c)
-    aux = nonzero((c > th))
-    index[int(N)-1] = aux[0]+np.floor((X[0]-1.))
-    ratio[int(N)-1] = matdiv(aux[0], N)
+while prob<p:
+  
+    # total number of combinations
+    comb_tot = nCr(num_ele*x,a)
+    # combinations without 1 ball
+    comb_sum = nCr(num_ele,a)*x
+    # combinations without 2 ball
+    comb_min = nCr(np.floor((n/(x-2))),a)*x
     
-plt.figure
-plt.plot(index)
-plt.figure
-plt.plot(ratio)
+    prob = 1 - (comb_sum - comb_min)/comb_tot
+    a += 1
+    
+print a
+   
+   
+import pymc
+from pymc import multivariate_hypergeometric_like
+
+pymc.distributions.multivariate_hypergeometric_like
+
+a=multivariate_hypergeometric_like([2, 2], [3,3])
+e**a
+ 
+ 
+ 
