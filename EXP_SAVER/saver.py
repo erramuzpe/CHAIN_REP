@@ -28,11 +28,11 @@ def remove_comb(list_):
 
 #main
  
-p = input('Tell me the probability you want to ensure in %: \n')
-x = input('Tell me the number of mutations: \n')
+p = input('Tell me the probability you want to ensure (0.95?): \n')
+x = input('Tell me the number of mutations (classes): \n')
 n = input('Tell me the number of elements in total (1000?): \n')
 
-print p
+
 num_ele = np.floor((n/x)) #number of elements x set
 ele_set  = np.ones(x)*num_ele #elements x set fixed
 
