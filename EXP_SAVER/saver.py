@@ -39,7 +39,6 @@ ele_set  = np.ones(x)*num_ele #elements x set fixed
 a=0 # unknown - starts in x
 cum_prob = 0
 
-
 while cum_prob<p:
     a += 1
     all_comb = multichoose(x,a)
@@ -56,7 +55,6 @@ while cum_prob<p:
     
     print "Number of experiments:", a ,"\n" ,"Prob:", cum_prob ,"\n"
     
-  
 print "Number of experiments:", a ,"\n" ,"Prob:", cum_prob ,"\n"
 
 
