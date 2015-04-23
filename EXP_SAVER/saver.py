@@ -59,6 +59,4 @@ while cum_prob<p:
   
 print "Number of experiments:", a ,"\n" ,"Prob:", cum_prob ,"\n"
 
-all_comb = multichoose(2,5)
-our_comb=remove_comb(all_comb)
 
