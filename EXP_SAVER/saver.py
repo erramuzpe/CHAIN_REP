@@ -21,7 +21,7 @@ def remove_comb(list_):
 
     for m in list_:
         for z in m:
-            if z == 0 or (1 not in m):
+            if z == 0:
                 x2.remove(m)
                 break
     return x2
@@ -32,20 +32,19 @@ p = input('Tell me the probability you want to ensure in %: \n')
 x = input('Tell me the number of mutations: \n')
 n = input('Tell me the number of elements in total (1000?): \n')
 
+print p
 num_ele = np.floor((n/x)) #number of elements x set
-
 ele_set  = np.ones(x)*num_ele #elements x set fixed
-unk_set = np.ones(x) #unknown set start
 
 a=0 # unknown - starts in x
 cum_prob = 0
 
 
 while cum_prob<p:
-    
+    a += 1
     all_comb = multichoose(x,a)
     our_comb=remove_comb(all_comb)
-
+    cum_prob = 0
     for comb in our_comb:
         if not comb:
             break
@@ -55,11 +54,11 @@ while cum_prob<p:
         
         cum_prob += prob_one_comb
     
+    print "Number of experiments:", a ,"\n" ,"Prob:", cum_prob ,"\n"
     
-    a += 1
-    print a, cum_prob
   
+print "Number of experiments:", a ,"\n" ,"Prob:", cum_prob ,"\n"
 
-  
-print a
+all_comb = multichoose(2,5)
+our_comb=remove_comb(all_comb)
 
