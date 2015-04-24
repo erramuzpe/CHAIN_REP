@@ -10,7 +10,7 @@ from pymc import multivariate_hypergeometric_like
 
 def multichoose(n,k):
     if k < 0 or n < 0: return "Error"
-    if not k: return [[0]*n]
+    if not k: return []
     if not n: return []
     if n == 1: return [[k]]
     return [[0]+val for val in multichoose(n-1,k)] + \
