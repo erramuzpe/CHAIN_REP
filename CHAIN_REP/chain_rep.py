@@ -6,22 +6,29 @@ Created on Fri Apr 24 12:55:04 2015
 """
 
 # -*- coding: utf-8 -*-
-
+bases = ['T', 'C', 'A', 'G']
+codons = [a+b+c for a in bases for b in bases for c in bases]
+amino_acids = 'FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
+codon_table = dict(zip(codons, amino_acids))
         
-def chain_rep(seq,old,new):
-    new_seq = ''
+def chain_rep(seq,start):
+    codon=seq[start+9:start+12]
+    if codon_table[codon] == A:
+        #substitute for V
+        codon = VVV
+    else: #substitute for A
+        codon = AAA
+    seq[start+9:start+12] = codon
     
-    for x_ in xrange(0, len(seq), 3):
-        codon = seq[x_: x_+3]
-        if codon == old:
-            new_seq += new
-        else: new_seq += codon
-    return new_seq
 
 def reverseComplement(sequence):
-  complement = {'a':'t','c':'g','g':'c','t':'a','n':'n'}
+  complement = {'A':'T','C':'G','G':'C','T':'A','N':'N'}
   return "".join([complement.get(nt.lower(), '') for nt in sequence[::-1]])
 
+def format_chain(seq,start):
+    seq = seq[0:start]+" "+ \
+    " ".join(seq[i:i+3] for i in range(start, len(seq)-start, 3)) \
+    +" "+ seq[-start:]
 
 # Main4
 
@@ -45,17 +52,40 @@ print 'You selected', seq[start_codon:start_codon+3], 'as your starting codon'
 #check = input('Is that correct?: (Y/N) \n')
 #if 
 
-print 'Processing...'
+fname = "new_chain.txt"
+file = open(fname, 'w')
 
-    new_chain = chain_rep(seq[start_pos:],start_codon)
-    new_chain_rev = 
+length_chain = start_codon*2+7*3 #start_codon + 7 codon + start_codon
+
+print 'Processing...'
+for x_ in xrange(0, len(seq), 3):
+    
+    chain = seq[x_: x_+length_chain] 
+    chain_rev = reverseComplement(chain)
+    
+    chain_rep(chain,start_codon)
+    chain_rep(chain_rev,start_codon)
+    
+    format_chain(chain,start_codon)
+    format_chain(chain_rev,start_codon)
+    
+    file.write(chain)
+    file.write(chain_rev)
+    
 
 print 'The new chain is: \n', new_chain
 
-fname = "new_chain.txt"
-file = open(fname, 'w')
-file.write(new_chain)
+
 file.close()
 
 
-seq2=reverseComplement(seq)
+
+
+s = 'TGGAGGCTGAGGAGACGGTGACTGAGGTTGGTGGAGG'
+s = " ".join(s[i:i+3] for i in range(start, len(s)-start, 2))
+
+seq1 = seq
+seq1 = seq1[0:start]+" "+ \ 
+    " ".join(seq1[i:i+3] for i in range(start, len(seq1)-start, 3)) \
+    +" "+ seq1[-start:]
+print seq1
