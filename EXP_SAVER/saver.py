@@ -2,6 +2,7 @@
 
 
 import numpy as np
+import pylab as pl
 
 # https://math.stackexchange.com/questions/920351/selecting-at-least-one-ball-of-each-color
 # https://en.wikipedia.org/wiki/Hypergeometric_distribution
@@ -38,6 +39,8 @@ ele_set  = np.ones(x)*num_ele #elements x set fixed
 
 a=0 # unknown - starts in x
 cum_prob = 0
+vector_a= []
+vector_cum_prob=[]
 
 while cum_prob<p:
     a += 1
@@ -54,7 +57,9 @@ while cum_prob<p:
         cum_prob += prob_one_comb
     
     print "Number of experiments:", a ,"\n" ,"Prob:", cum_prob ,"\n"
+    vector_a = vector_a.append(a)
+    vector_cum_prob = vector_cum_prob.append(cum_prob)
     
 print "Number of experiments:", a ,"\n" ,"Prob:", cum_prob ,"\n"
 
-
+pl.plot(vector_a, vector_cum_prob)
