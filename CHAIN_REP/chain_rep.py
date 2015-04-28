@@ -10,6 +10,31 @@ bases = ['T', 'C', 'A', 'G']
 codons = [a+b+c for a in bases for b in bases for c in bases]
 amino_acids = 'FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
 codon_table = dict(zip(codons, amino_acids))
+codon_change_to_V = {
+		"GCA" : "GTA",
+		"GCC" : "GTC",
+		"GCG" : "GTG",
+		"GCT" : "GTT"
+	}
+codon_change_to_A = { #GCA GCC GCG GCT
+    "TTT":"GCT", "TTC":"GCC", "TTA":"GCA", "TTG":"GCG",
+    "TCT":"GCT", "TCC":"GCC", "TCA":"GCA", "TCG":"GCG",
+    "TAT":"GCT", "TAC":"GCC", "TAA":"GCA", "TAG":"GCG",
+    "TGT":"GCT", "TGC":"GCC", "TGA":"GCA", "TGG":"GCG",
+    "CTT":"GCT", "CTC":"GCC", "CTA":"GCA", "CTG":"GCG",
+    "CCT":"GCT", "CCC":"GCC", "CCA":"GCA", "CCG":"GCG",
+    "CAT":"GCT", "CAC":"GCC", "CAA":"GCA", "CAG":"GCG",
+    "CGT":"GCT", "CGC":"GCC", "CGA":"GCA", "CGG":"GCG",
+    "ATT":"GCT", "ATC":"GCC", "ATA":"GCA", "ATG":"GCG",
+    "ACT":"GCT", "ACC":"GCC", "ACA":"GCA", "ACG":"GCG",
+    "AAT":"GCT", "AAC":"GCC", "AAA":"GCA", "AAG":"GCG",
+    "AGT":"GCT", "AGC":"GCC", "AGA":"GCA", "AGG":"GCG",
+    "GTT":"GCT", "GTC":"GCC", "GTA":"GCA", "GTG":"GCG",
+    "GAT":"GCT", "GAC":"GCC", "GAA":"GCA", "GAG":"GCG",
+    "GGT":"GCT", "GGC":"GCC", "GGA":"GCA", "GGG":"GCG"
+	}
+ 
+
         
 def chain_rep(seq,start):
     
@@ -17,11 +42,10 @@ def chain_rep(seq,start):
     
     codon=seq[start+9:start+12]
     if codon_table[codon] == 'A': #substitute for V
-        codon = 'VVV'
+        codon = codon_change_to_V[codon]
     else: #substitute for A
-        codon = 'AAA'
+        codon = codon_change_to_A[codon]
     seq = seq[:start+9] + codon + seq[:start+12]
-    print seq
     return seq
 
 def reverseComplement(seq):
@@ -32,7 +56,7 @@ def reverseComplement(seq):
 def format_chain(seq,start):
     seq = seq[0:start]+" "+ \
     " ".join(seq[i:i+3] for i in range(start, len(seq)-start, 3)) \
-    +" "+ seq[-start:]
+    +" "+ seq[len(seq)-start:]
     return seq
 
 # Main4
@@ -85,3 +109,4 @@ for x_ in xrange(0, len(seq), 3):
 
 
 file.close()
+print 'Results in new_chain.txt'
