@@ -45,7 +45,7 @@ def chain_rep(seq,start):
         codon = codon_change_to_V[codon]
     else: #substitute for A
         codon = codon_change_to_A[codon]
-    seq = seq[:start+9] + codon + seq[:start+12]
+    seq = seq[:start+9] + codon + seq[start+12:]
     return seq
 
 def reverseComplement(seq):
