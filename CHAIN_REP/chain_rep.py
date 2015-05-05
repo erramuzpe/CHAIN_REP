@@ -40,12 +40,12 @@ def chain_rep(seq,start):
     
     global codon_table
     
-    codon=seq[start+9:start+12]
+    codon=seq[start+12:start+15]
     if codon_table[codon] == 'A': #substitute for V
         codon = codon_change_to_V[codon]
     else: #substitute for A
         codon = codon_change_to_A[codon]
-    seq = seq[:start+9] + codon + seq[start+12:]
+    seq = seq[:start+12] + codon + seq[start+15:]
     return seq
 
 def reverseComplement(seq):
@@ -87,7 +87,7 @@ print 'You selected', seq[start_codon:start_codon+3], 'as your starting codon'
 fname = "new_chain.txt"
 file = open(fname, 'w')
 
-length_chain = start_codon*2+7*3 #start_codon + 7 codon + start_codon
+length_chain = start_codon*2+9*3 #start_codon + 9 codon + start_codon
 
 print 'Processing...'
 for x_ in xrange(0, len(seq), 3):
