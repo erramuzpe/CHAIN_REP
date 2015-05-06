@@ -6,6 +6,8 @@ Created on Fri Apr 24 12:55:04 2015
 """
 
 # -*- coding: utf-8 -*-
+import sys
+
 bases = ['T', 'C', 'A', 'G']
 codons = [a+b+c for a in bases for b in bases for c in bases]
 amino_acids = 'FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
@@ -75,12 +77,28 @@ seq=seq[start_pos:] #delete the rest of the chain
 print 'Your chain now is', seq[:10], '...'
 
 
-start_codon = input('Tell me the position the first codon starts: \n')
-start_codon -= 1
-print 'You selected', seq[start_codon:start_codon+3], 'as your starting codon'
+oligo_num = input('Tell me the number of oligos: \n')
+side_num = 0
+
+if (oligo_num-3)%2 != 0: 
+    print 'Incorrect number of oligos, this will halt'
+    sys.exit()
+else:
+    print 'Number of oligos accepted'
+    if (oligo_num-3)%3 == 0: 
+        print 'Number of oligos in each side = 0'
+    elif (oligo_num-3)%3 == 2:
+        print 'Number of oligos in each side = 1'
+        side_num = 1
+    else:
+        print 'Number of oligos in each side = 2'
+        side_num = 2
+        
+codon_num = (oligo_num - 3 - 2*side_num) / 2 / 3
+
 
 line_num = input('Tell me the line you would like to print as the first one in \
-    your output file (1?): \n')
+your output file (1?): \n')
 
 #old_trip = raw_input('Tell me the triplet you would like to replace (old): \n')
 #new_trip = raw_input('Tell me the triplet you would like to replace for (new): \n')
@@ -90,17 +108,15 @@ line_num = input('Tell me the line you would like to print as the first one in \
 fname = "new_chain.txt"
 file = open(fname, 'w')
 
-length_chain = start_codon*2+9*3 #start_codon + 9 codon + start_codon
-
 print 'Processing...'
 for x_ in xrange(0, len(seq), 3):
     
-    chain = seq[x_: x_+length_chain] 
+    chain = seq[x_: x_+oligo_num] 
     
     
-    if len(chain) != length_chain: break
+    if len(chain) != oligo_num: break
     
-    chain = chain_rep(chain,start_codon)
+    chain = chain_rep(chain,side_num)
     chain_rev = reverseComplement(chain)
     
     #chain = format_chain(chain,start_codon)
