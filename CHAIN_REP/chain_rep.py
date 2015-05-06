@@ -93,15 +93,15 @@ print 'Processing...'
 for x_ in xrange(0, len(seq), 3):
     
     chain = seq[x_: x_+length_chain] 
-    chain_rev = reverseComplement(chain)
+    
     
     if len(chain) != length_chain: break
     
     chain = chain_rep(chain,start_codon)
-    chain_rev = chain_rep(chain_rev,start_codon)
+    chain_rev = reverseComplement(chain)
     
-    chain = format_chain(chain,start_codon)
-    chain_rev = format_chain(chain_rev,start_codon)
+    #chain = format_chain(chain,start_codon)
+    #chain_rev = format_chain(chain_rev,start_codon)
     
     file.write(chain+ '\n')
     file.write(chain_rev+ '\n \n')
