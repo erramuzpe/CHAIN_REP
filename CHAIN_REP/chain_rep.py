@@ -79,6 +79,9 @@ start_codon = input('Tell me the position the first codon starts: \n')
 start_codon -= 1
 print 'You selected', seq[start_codon:start_codon+3], 'as your starting codon'
 
+line_num = input('Tell me the line you would like to print as the first one in \
+    your output file (1?): \n')
+
 #old_trip = raw_input('Tell me the triplet you would like to replace (old): \n')
 #new_trip = raw_input('Tell me the triplet you would like to replace for (new): \n')
 #check = input('Is that correct?: (Y/N) \n')
@@ -103,10 +106,10 @@ for x_ in xrange(0, len(seq), 3):
     #chain = format_chain(chain,start_codon)
     #chain_rev = format_chain(chain_rev,start_codon)
     
-    file.write(chain+ '\n')
-    file.write(chain_rev+ '\n \n')
+    file.write(str(line_num) + " " + chain + '\n')
+    file.write(str(line_num+1) + " " + chain_rev + '\n \n')
     
-
+    line_num += 2
 
 file.close()
 print 'Results in new_chain.txt'
