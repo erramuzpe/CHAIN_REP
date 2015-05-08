@@ -61,7 +61,8 @@ def format_chain(seq,start):
     +" "+ seq[len(seq)-start:]
     return seq
 
-# Main4
+
+#Main start
 
 f =  open('chain.txt','r')
 seq = f.read()
@@ -77,7 +78,7 @@ seq=seq[start_pos:] #delete the rest of the chain
 print 'Your chain now is', seq[:10], '...'
 
 
-oligo_num = input('Tell me the number of oligos: \n')
+oligo_num = input('Tell me the length of oligos: \n')
 side_num = 0
 
 if (oligo_num-3)%2 != 0: 
@@ -85,25 +86,15 @@ if (oligo_num-3)%2 != 0:
     sys.exit()
 else:
     print 'Number of oligos accepted'
-    if (oligo_num-3)%3 == 0: 
-        print 'Number of oligos in each side = 0'
-    elif (oligo_num-3)%3 == 2:
-        print 'Number of oligos in each side = 1'
-        side_num = 1
+    if (oligo_num-3)%3 == 2:
+        side_num = 1       
     else:
-        print 'Number of oligos in each side = 2'
         side_num = 2
-        
+                
 codon_num = (oligo_num - 3 - 2*side_num) / 2 / 3
-
 
 line_num = input('Tell me the line you would like to print as the first one in \
 your output file (1?): \n')
-
-#old_trip = raw_input('Tell me the triplet you would like to replace (old): \n')
-#new_trip = raw_input('Tell me the triplet you would like to replace for (new): \n')
-#check = input('Is that correct?: (Y/N) \n')
-#if 
 
 fname = "new_chain.txt"
 file = open(fname, 'w')
@@ -112,15 +103,11 @@ print 'Processing...'
 for x_ in xrange(0, len(seq), 3):
     
     chain = seq[x_: x_+oligo_num] 
-    
-    
+      
     if len(chain) != oligo_num: break
     
     chain = chain_rep(chain,side_num)
-    chain_rev = reverseComplement(chain)
-    
-    #chain = format_chain(chain,start_codon)
-    #chain_rev = format_chain(chain_rev,start_codon)
+    chain_rev = reverseComplement(chain)    
     
     file.write(str(line_num) + " " + chain + '\n')
     file.write(str(line_num+1) + " " + chain_rev + '\n \n')
