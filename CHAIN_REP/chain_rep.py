@@ -70,13 +70,18 @@ def format_chain(seq,start):
 
 f =  open('chain.txt','r')
 seq = f.read()
+f.close()
+
+# seq treatment
 seq = re.sub(r'\W', '', seq) #remove all spaces/blanks/newlines
 seq = re.sub('[^a-zA-Z]', '', seq)  #remove all non LETTER char
-f.close()
+seq = seq.upper()
+
 
 print 'Your chains first 20:\n', seq[0:20], '\n'
 
 start_pos = input('Tell me the position you would like to start: \n')
+if not start_pos: start_pos = 1
 start_pos -= 1
 print 'You selected', seq[start_pos:start_pos+10], 'as your starting point'
 
@@ -86,6 +91,8 @@ print 'Your chain now is', seq[:10], '...'
 
 
 oligo_num = input('Tell me the length of oligos: \n')
+if not oligo_num: oligo_num = 27
+
 side_num = 0
 
 if (oligo_num-3)%2 != 0: 
@@ -102,6 +109,7 @@ codon_num = (oligo_num - 3 - 2*side_num) / 2 / 3
 
 line_num = input('Tell me the line you would like to print as the first one in \
 your output file (1?): \n')
+if not line_num: line_num = 1
 
 fname = "new_chain.txt"
 file = open(fname, 'w')
