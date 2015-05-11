@@ -7,6 +7,10 @@ Created on Fri Apr 24 12:55:04 2015
 
 # -*- coding: utf-8 -*-
 import sys
+import re
+
+mystr = "I want to Remove all white \t spaces, new lines \n and tabs \t"
+print re.sub(r"\W", "", mystr)
 
 bases = ['T', 'C', 'A', 'G']
 codons = [a+b+c for a in bases for b in bases for c in bases]
@@ -66,6 +70,9 @@ def format_chain(seq,start):
 
 f =  open('chain.txt','r')
 seq = f.read()
+seq = re.sub(r'\W', '', seq) #remove all spaces/blanks/newlines
+seq = re.sub('[^a-zA-Z]', '', seq)  #remove all non LETTER char
+f.close()
 
 print 'Your chains first 20:\n', seq[0:20], '\n'
 
