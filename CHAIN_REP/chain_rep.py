@@ -80,8 +80,11 @@ seq = seq.upper()
 
 print 'Your chains first 20:\n', seq[0:20], '\n'
 
-start_pos = input('Tell me the position you would like to start: \n')
-if not start_pos: start_pos = 1
+try:
+    start_pos = input('Tell me the position you would like to start (1 by default): \n')
+except:
+    start_pos = 1
+    
 start_pos -= 1
 print 'You selected', seq[start_pos:start_pos+10], 'as your starting point'
 
@@ -91,8 +94,6 @@ print 'Your chain now is', seq[:10], '...'
 
 
 oligo_num = input('Tell me the length of oligos: \n')
-if not oligo_num: oligo_num = 27
-
 side_num = 0
 
 if (oligo_num-3)%2 != 0: 
@@ -107,9 +108,10 @@ else:
                 
 codon_num = (oligo_num - 3 - 2*side_num) / 2 / 3
 
-line_num = input('Tell me the line you would like to print as the first one in \
-your output file (1?): \n')
-if not line_num: line_num = 1
+try:
+    line_num = input('Tell me the line you would like to print as the first one in \
+your output file (1 by default): \n')
+except: line_num = 1
 
 fname = "new_chain.txt"
 file = open(fname, 'w')
