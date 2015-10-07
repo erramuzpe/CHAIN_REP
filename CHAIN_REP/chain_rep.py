@@ -9,8 +9,8 @@ Created on Fri Apr 24 12:55:04 2015
 import sys
 import re
 
-mystr = "I want to Remove all white \t spaces, new lines \n and tabs \t"
-print re.sub(r"\W", "", mystr)
+#mystr = "I want to Remove all white \t spaces, new lines \n and tabs \t"
+#print re.sub(r"\W", "", mystr)
 
 bases = ['T', 'C', 'A', 'G']
 codons = [a+b+c for a in bases for b in bases for c in bases]
@@ -42,17 +42,17 @@ codon_change_to_A = { #GCA GCC GCG GCT
  
 
         
-def chain_rep(seq,start):
+def chain_rep(chain,start):
     
     global codon_table
     
-    codon=seq[start+12:start+15]
+    codon=chain[start:start+3]
     if codon_table[codon] == 'A': #substitute for V
         codon = codon_change_to_V[codon]
     else: #substitute for A
         codon = codon_change_to_A[codon]
-    seq = seq[:start+12] + codon + seq[start+15:]
-    return seq
+    chain = chain[:start] + codon + chain[start+3:]
+    return chain
 
 def reverseComplement(seq):
   sequence = seq*1
@@ -93,20 +93,35 @@ seq=seq[start_pos:] #delete the rest of the chain
 print 'Your chain now is', seq[:10], '...'
 
 
-oligo_num = input('Tell me the length of oligos: \n')
-side_num = 0
 
-if (oligo_num-3)%2 != 0: 
-    print 'Incorrect number of oligos, this will halt'
-    sys.exit()
-else:
-    print 'Number of oligos accepted'
-    if (oligo_num-3)%3 == 2:
-        side_num = 1       
-    else:
-        side_num = 2
+
+
+oligo_assert = False
+while oligo_assert == False:
+    try:
+        oligo_num = input('Tell me the length of oligos: \n')
+        side_num = 0
+        
+        if (oligo_num-3)%2 != 0 or (oligo_num-3) <= 0: 
+            print 'Incorrect number of oligos, insert a correct one'
+        else:
+            print 'Number of oligos accepted'
+            oligo_assert = True
+        
+            if (oligo_num-3)%3 == 2:
+                side_num = 1       
+            else:
+                side_num = 2
+    except:
+        print 'Insert a number, please'
+        
+        
+        
                 
 codon_num = (oligo_num - 3 - 2*side_num) / 2 / 3
+
+
+
 
 try:
     line_num = input('Tell me the line you would like to print as the first one in \
@@ -115,6 +130,10 @@ except: line_num = 1
 
 fname = "new_chain.txt"
 file = open(fname, 'w')
+
+
+
+
 
 print 'Processing...'
 for x_ in xrange(0, len(seq), 3):
@@ -133,3 +152,10 @@ for x_ in xrange(0, len(seq), 3):
 
 file.close()
 print 'Results in new_chain.txt'
+
+
+
+
+
+
+
