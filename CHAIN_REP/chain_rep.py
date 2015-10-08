@@ -10,6 +10,7 @@ Created on Fri Apr 24 12:55:04 2015
 import re
 import wx
 import os
+import sys
 
 
 
@@ -74,235 +75,154 @@ def format_chain(seq,start):
 class ExamplePanel(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        self.quote = wx.StaticText(self, label="Your quote :", pos=(20, 30))
+        self.dirname=''
 
         # A multiline TextCtrl - This is here to show how the events work in this program, don't pay too much attention to it
-        self.logger = wx.TextCtrl(self, pos=(300,20), size=(200,300), style=wx.TE_MULTILINE | wx.TE_READONLY)
+        self.logger = wx.TextCtrl(self, pos=(300,20), size=(375,220), style=wx.TE_MULTILINE | wx.TE_READONLY)
 
         # Open button
-        self.buttonopen =wx.Button(self, label="Open", pos=(200, 300))
+        self.buttonopen =wx.Button(self, label="Open", pos=(20, 200))
         self.Bind(wx.EVT_BUTTON, self.OnClickOpen,self.buttonopen)
         
         # Run button
-        self.buttonrun =wx.Button(self, label="Run", pos=(200, 400))
+        self.buttonrun =wx.Button(self, label="Run", pos=(110, 200))
         self.Bind(wx.EVT_BUTTON, self.OnClickRun,self.buttonrun)
+        
+        # Exit button
+        self.buttonexit =wx.Button(self, label="Exit", pos=(200, 200))
+        self.Bind(wx.EVT_BUTTON, self.OnClickExit,self.buttonexit)
 
 
         # the position control 
-        self.lblpos = wx.StaticText(self, label="Tell me the position you would like to start", pos=(20,60))
-        self.editpos = wx.TextCtrl(self, value="1", pos=(150, 60), size=(140,-1))
-        self.Bind(wx.EVT_TEXT, self.EvtTextpos, self.editpos)
+        self.lblpos = wx.StaticText(self, label="Position you would like to start", pos=(20,20))
+        self.editpos = wx.TextCtrl(self, value="1", pos=(20, 45), size=(140,-1))
 
         # the oligo num control
-        self.lbloligo = wx.StaticText(self, label="Tell me the length of oligos:", pos=(20, 90))
-        self.editoligo = wx.TextCtrl(self, value="7", pos=(150, 90), size=(140,-1))
-        self.Bind(wx.EVT_TEXT, self.EvtTextoligo, self.editoligo)
+        self.lbloligo = wx.StaticText(self, label="Length of oligos:", pos=(20, 80))
+        self.editoligo = wx.TextCtrl(self, value="7", pos=(20, 105), size=(140,-1))
         
         # the oligo num control
-        self.lblline = wx.StaticText(self, label="Tell me the line to start in the output:", pos=(20, 120))
-        self.editline = wx.TextCtrl(self, value="1", pos=(150, 120), size=(140,-1))
-        self.Bind(wx.EVT_TEXT, self.EvtTextline, self.editline)
+        self.lblline = wx.StaticText(self, label="Line to start in the output:", pos=(20, 140))
+        self.editline = wx.TextCtrl(self, value="1", pos=(20, 165), size=(140,-1))
 
-
+        
 
 
     def OnClickOpen(self,event):
         global seq
         
         try:
-             """ Open a file"""
-             dlg = wx.FileDialog(self, "Choose a file", self.dirname, "", "*.*", wx.OPEN)
-             if dlg.ShowModal() == wx.ID_OK:
-                 self.filename = dlg.GetFilename()
-                 self.dirname = dlg.GetDirectory()
-                 f = open(os.path.join(self.dirname, self.filename), 'r')
-                 #self.control.SetValue(f.read())
-                 seq = f.read()
-                 f.close()
-             dlg.Destroy()
+            
+            """ Open a file"""
+            dlg = wx.FileDialog(self, "Choose a file", self.dirname, "", "*.*", wx.OPEN)
+            if dlg.ShowModal() == wx.ID_OK:
+                self.filename = dlg.GetFilename()
+                self.dirname = dlg.GetDirectory()
+                f = open(os.path.join(self.dirname, self.filename), 'r')
+                #self.control.SetValue(f.read())
+                seq = f.read()
+                f.close()
+            dlg.Destroy()
+            self.logger.AppendText('File loaded! \n')   
              
-        except: self.logger.AppendText("There was some problem opening the file" %event.GetId())
-    def EvtTextpos(self, event):
-        self.logger.AppendText('EvtText: %s\n' % event.GetString())
-    def EvtTextoligo(self, event):
-        self.logger.AppendText('EvtText: %s\n' % event.GetString())
-    def EvtTextline(self, event):
-        self.logger.AppendText('fuvlk %s\n' % event.GetString())
+             
+            # seq initial treatment
+            seq = re.sub(r'\W', '', seq) #remove all spaces/blanks/newlines
+            seq = re.sub('[^a-zA-Z]', '', seq)  #remove all non LETTER char
+            seq = seq.upper()
+            self.logger.AppendText('Your chains first 20:\n %s \n' % seq[0:20])
+            
+            
+            
+        except: self.logger.AppendText("There was some problem opening the file \n")
+        
+
     def OnClickRun(self,event):
         global seq
         
+        try:        
+            start_pos = int(self.editpos.GetValue())
+            
+            start_pos -= 1
+            self.logger.AppendText('You selected %s as your starting point \n' % seq[start_pos:start_pos+10])
+
+            seq=seq[start_pos:] #delete the rest of the chain
+            
+            self.logger.AppendText('Your chain now is %s ... \n' % seq[:10])
+            
+            
+                        
+            
+            oligo_assert = False
+            try:
+                oligo_num = int(self.editoligo.GetValue())
+                side_num = 0
+                
+                if (oligo_num-3)%2 != 0 or (oligo_num-3) <= 0: 
+                    self.logger.AppendText('Incorrect number of oligos, insert a correct one \n')
+                else:
+                    self.logger.AppendText('Number of oligos accepted \n')
+
+                    oligo_assert = True
+                
+                    if (oligo_num-3)%3 == 2:
+                        side_num = 1       
+                    else:
+                        side_num = 2
+            except:
+                self.logger.AppendText( 'Insert a number, please \n')
+
+            if oligo_assert == True:
+                
+                #codon_num = (oligo_num - 3 - 2*side_num) / 2 / 3
+                
+                line_num = int(self.editline.GetValue())
+
+                fname = "new_chain.txt"
+                file = open(fname, 'w')
+                
+                
+                self.logger.AppendText('\nProcessing...  \n')
+                for x_ in xrange(0, len(seq), 3):
+                    
+                    chain = seq[x_: x_+oligo_num] 
+                      
+                    if len(chain) != oligo_num: break
+                    
+                    chain = chain_rep(chain,side_num)
+                    chain_rev = reverseComplement(chain)    
+                    
+                    file.write(str(line_num) + " " + chain + '\n')
+                    file.write(str(line_num+1) + " " + chain_rev + '\n \n')
+                    
+                    line_num += 2
+                
+                file.close()
+                self.logger.AppendText('\nFinished! Results in new_chain.txt\n')
         
-        self.logger.AppendText(" Click on object with Id %d\n" %event.GetId())
-
-
+        except:
+            self.logger.AppendText("Not file loaded? \n") 
+            print "Unexpected error:", sys.exc_info()[0]
+            
+    
+    def OnClickExit(self,event):
+        app.Destroy()
 
 app = wx.App(False)
-frame = wx.Frame(None)
+frame = wx.Frame(None,0,'Chain Rep', size=(700,280))
 panel = ExamplePanel(frame)
 frame.Show()
 app.MainLoop()
 
 
 
-class MainWindow(wx.Frame):
-    def __init__(self, parent, title):
-        self.dirname=''
 
-        # A "-1" in the size parameter instructs wxWidgets to use the default size.
-        # In this case, we select 200px width and the default height.
-        wx.Frame.__init__(self, parent, title=title, size=(200,-1))
-        self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE)
-        self.CreateStatusBar() # A Statusbar in the bottom of the window
-
-        # Setting up the menu.
-        filemenu= wx.Menu()
-        menuOpen = filemenu.Append(wx.ID_OPEN, "&Open"," Open a file to edit")
-        menuAbout= filemenu.Append(wx.ID_ABOUT, "&About"," Information about this program")
-        menuExit = filemenu.Append(wx.ID_EXIT,"E&xit"," Terminate the program")
-
-        # Creating the menubar.
-        menuBar = wx.MenuBar()
-        menuBar.Append(filemenu,"&File") # Adding the "filemenu" to the MenuBar
-        self.SetMenuBar(menuBar)  # Adding the MenuBar to the Frame content.
-
-        # Events.
-        self.Bind(wx.EVT_MENU, self.OnOpen, menuOpen)
-        self.Bind(wx.EVT_MENU, self.OnExit, menuExit)
-        self.Bind(wx.EVT_MENU, self.OnAbout, menuAbout)
-
-        self.sizer2 = wx.BoxSizer(wx.HORIZONTAL)
-        self.buttons = []
-        for i in range(0, 6):
-            self.buttons.append(wx.Button(self, -1, "Button &"+str(i)))
-            self.sizer2.Add(self.buttons[i], 1, wx.EXPAND)
-
-        # Use some sizers to see layout options
-        self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.sizer.Add(self.control, 1, wx.EXPAND)
-        self.sizer.Add(self.sizer2, 0, wx.EXPAND)
-
-        #Layout sizers
-        self.SetSizer(self.sizer)
-        self.SetAutoLayout(1)
-        self.sizer.Fit(self)
-        self.Show()
-
-    def OnAbout(self,e):
-        # Create a message dialog box
-        dlg = wx.MessageDialog(self, " A sample editor \n in wxPython", "About Sample Editor", wx.OK)
-        dlg.ShowModal() # Shows it
-        dlg.Destroy() # finally destroy it when finished.
-
-    def OnExit(self,e):
-        self.Close(True)  # Close the frame.
-
-    def OnOpen(self,e):
-        """ Open a file"""
-        dlg = wx.FileDialog(self, "Choose a file", self.dirname, "", "*.*", wx.OPEN)
-        if dlg.ShowModal() == wx.ID_OK:
-            self.filename = dlg.GetFilename()
-            self.dirname = dlg.GetDirectory()
-            f = open(os.path.join(self.dirname, self.filename), 'r')
-            self.control.SetValue(f.read())
-            f.close()
-        dlg.Destroy()
-
-app = wx.App(False)
-frame = MainWindow(None, "Sample editor")
-app.MainLoop()
-
-
-
-
-
-
-
-
-
-f =  open('chain.txt','r')
-seq = f.read()
-f.close()
-
-# seq treatment
-seq = re.sub(r'\W', '', seq) #remove all spaces/blanks/newlines
-seq = re.sub('[^a-zA-Z]', '', seq)  #remove all non LETTER char
-seq = seq.upper()
-
-
-print 'Your chains first 20:\n', seq[0:20], '\n'
-
-try:
-    start_pos = input('Tell me the position you would like to start (1 by default): \n')
-except:
-    start_pos = 1
-    
-start_pos -= 1
-print 'You selected', seq[start_pos:start_pos+10], 'as your starting point'
-
-seq=seq[start_pos:] #delete the rest of the chain
-
-print 'Your chain now is', seq[:10], '...'
-
-
-
-
-
-oligo_assert = False
-while oligo_assert == False:
-    try:
-        oligo_num = input('Tell me the length of oligos: \n')
-        side_num = 0
-        
-        if (oligo_num-3)%2 != 0 or (oligo_num-3) <= 0: 
-            print 'Incorrect number of oligos, insert a correct one'
-        else:
-            print 'Number of oligos accepted'
-            oligo_assert = True
-        
-            if (oligo_num-3)%3 == 2:
-                side_num = 1       
-            else:
-                side_num = 2
-    except:
-        print 'Insert a number, please'
         
         
         
-                
-codon_num = (oligo_num - 3 - 2*side_num) / 2 / 3
+           
 
 
-
-
-try:
-    line_num = input('Tell me the line you would like to print as the first one in \
-your output file (1 by default): \n')
-except: line_num = 1
-
-fname = "new_chain.txt"
-file = open(fname, 'w')
-
-
-
-
-
-print 'Processing...'
-for x_ in xrange(0, len(seq), 3):
-    
-    chain = seq[x_: x_+oligo_num] 
-      
-    if len(chain) != oligo_num: break
-    
-    chain = chain_rep(chain,side_num)
-    chain_rev = reverseComplement(chain)    
-    
-    file.write(str(line_num) + " " + chain + '\n')
-    file.write(str(line_num+1) + " " + chain_rev + '\n \n')
-    
-    line_num += 2
-
-file.close()
-print 'Results in new_chain.txt'
 
 
 
