@@ -164,11 +164,7 @@ class ExamplePanel(wx.Panel):
                     self.logger.AppendText('Number of oligos accepted \n')
 
                     oligo_assert = True
-                
-                    if (oligo_num-3)%3 == 2:
-                        side_num = 1       
-                    else:
-                        side_num = 2
+                    side_num = (oligo_num-3)/2   
             except:
                 self.logger.AppendText( 'Insert a number, please \n')
 
