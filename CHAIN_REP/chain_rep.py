@@ -107,19 +107,10 @@ while oligo_assert == False:
         else:
             print 'Number of oligos accepted'
             oligo_assert = True
-        
-            if (oligo_num-3)%3 == 2:
-                side_num = 1       
-            else:
-                side_num = 2
+            side_num = (oligo_num-3)/2   
     except:
         print 'Insert a number, please'
         
-        
-        
-                
-codon_num = (oligo_num - 3 - 2*side_num) / 2 / 3
-
 
 
 
