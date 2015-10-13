@@ -205,7 +205,7 @@ class ExamplePanel(wx.Panel):
         sys.exit()
 
 app = wx.App(False)
-frame = wx.Frame(None,0,'Ala Chain Rep', size=(775,320))
+frame = wx.Frame(None,0,'AlaChainRep', size=(775,320))
 panel = ExamplePanel(frame)
 frame.Show()
 app.MainLoop()
