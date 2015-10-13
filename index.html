@@ -38,23 +38,25 @@
 <a id="before-using-alachainrep" class="anchor" href="#before-using-alachainrep" aria-hidden="true"><span class="octicon octicon-link"></span></a>Before using AlaChainRep:</h3>
 
 <ul>
-<li>The program generates mutagenic oligonucleotide primers of pre-defined length for Ala-scanning mutagenesis (substitution to Ala of each residue of a given amino acid sequence) of a cDNA of known sequence.</li>
+<li>The program generates mutagenic oligonucleotide primers of pre-defined length for Ala-scanning mutagenesis (substitution to Ala of each residue of a given amino acid sequence) of a known cDNA sequence.</li>
 <li>The forward and reverse mutagenic primers for each mutation are fully complementary, and all primers have the same length, which is defined by the user.</li>
 <li>The mutated Ala codon (3 nucleotides) is placed in the middle of the primer, with an equal number of nucleotides 5’ and 3’ to it. Therefore, the defined length of mutagenic primers has to be an odd number.</li>
-<li>Input: the program accepts as input .txt files containing the cDNA sequence of interest, and ignores numbers, non-letter characters, spaces, or line breaks. The first letter in the .txt file is considered the first position from the chain (sequence to be mutagenized). Therefore, letter characters other than the nucleotides should be avoided in the file. The user defines where to start the design of primers by defining the position to start in the chain. </li>
-<li>Output: the program provides a list of consecutively numbered mutagenic primers, forward and reverse, written 5’ to 3’. The numbering of the first forward mutagenic primer can be previously defined by the user.</li>
+<li>
+<strong>Input</strong>: the program accepts as input <strong>.txt files</strong> containing the cDNA sequence of interest, and ignores numbers, non-letter characters, spaces, or line breaks. The first letter in the .txt file is considered the first position from the chain (sequence to be mutagenized). Therefore, letter characters other than the nucleotides should be avoided in the file. The user defines where to start the design of primers by defining the position to start in the chain. </li>
+<li>
+<strong>Output</strong>: the program provides a new .txt file with a list of consecutively numbered mutagenic primers, forward and reverse, written 5’ to 3’. The numbering of the first forward mutagenic primer and the name of the .txt file can be defined by the user.</li>
 </ul>
 
 <h3>
 <a id="using-alachainrep" class="anchor" href="#using-alachainrep" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using AlaChainRep:</h3>
 
 <ol>
-<li>Click the “Open” box and browse for the .txt file containing the cDNA of interest.</li>
-<li>The 40 first positions of your chain are shown. </li>
+<li>Click “Open” and browse for the .txt file containing the cDNA of interest.</li>
+<li>The 40 first positions of your nucleotide sequence are shown. </li>
 <li>Define the length of the mutagenic primers.</li>
 <li>Define the position at which you would like to start the designing of mutagenic primers. This position indicates the first nucleotide in the first mutagenic primer, and it will depend on the position of the first codon to be mutagenized and on the defined length of the mutagenic primers.</li>
-<li>Click “Run”.</li>
-<li>The list of mutagenic primers is displayed in a new .txt file (xxx.txt) created in the folder where the Chain_Rep program was opened.<br>
+<li>Click “Run”. </li>
+<li>The list of mutagenic primers is displayed in a new .txt file (xxx.txt) created in the folder where the Ala Chain Rep program was opened.<br>
 </li>
 </ol>
 
