@@ -78,34 +78,37 @@ class ExamplePanel(wx.Panel):
         self.dirname=''
 
         # A multiline TextCtrl - This is here to show how the events work in this program, don't pay too much attention to it
-        self.logger = wx.TextCtrl(self, pos=(300,20), size=(375,220), style=wx.TE_MULTILINE | wx.TE_READONLY)
+        self.logger = wx.TextCtrl(self, pos=(340,20), size=(415,260), style=wx.TE_MULTILINE | wx.TE_READONLY)
 
         # Open button
-        self.buttonopen =wx.Button(self, label="Open", pos=(20, 200))
+        self.buttonopen =wx.Button(self, label="Open", pos=(20, 250))
         self.Bind(wx.EVT_BUTTON, self.OnClickOpen,self.buttonopen)
         
         # Run button
-        self.buttonrun =wx.Button(self, label="Run", pos=(110, 200))
+        self.buttonrun =wx.Button(self, label="Run", pos=(110, 250))
         self.Bind(wx.EVT_BUTTON, self.OnClickRun,self.buttonrun)
         
         # Exit button
-        self.buttonexit =wx.Button(self, label="Exit", pos=(200, 200))
+        self.buttonexit =wx.Button(self, label="Exit", pos=(200, 250))
         self.Bind(wx.EVT_BUTTON, self.OnClickExit,self.buttonexit)
 
 
+        # the oligo num control
+        self.lbloligo = wx.StaticText(self, label="Length of oligos:", pos=(20, 20))
+        self.editoligo = wx.TextCtrl(self, value="7", pos=(20, 40), size=(140,-1))
+
         # the position control 
-        self.lblpos = wx.StaticText(self, label="Position you would like to start", pos=(20,20))
-        self.editpos = wx.TextCtrl(self, value="1", pos=(20, 45), size=(140,-1))
-
-        # the oligo num control
-        self.lbloligo = wx.StaticText(self, label="Length of oligos:", pos=(20, 80))
-        self.editoligo = wx.TextCtrl(self, value="7", pos=(20, 105), size=(140,-1))
+        self.lblpos = wx.StaticText(self, label="Position you would like to start", pos=(20,70))
+        self.editpos = wx.TextCtrl(self, value="1", pos=(20, 90), size=(140,-1))
         
         # the oligo num control
-        self.lblline = wx.StaticText(self, label="Line to start in the output:", pos=(20, 140))
-        self.editline = wx.TextCtrl(self, value="1", pos=(20, 165), size=(140,-1))
+        self.lblline = wx.StaticText(self, label="Line to start in the output:", pos=(20, 120))
+        self.editline = wx.TextCtrl(self, value="1", pos=(20, 140), size=(140,-1))
 
-        
+        # the oligo num control
+        self.lblname = wx.StaticText(self, label="Output's name:", pos=(20, 170))
+        self.editname = wx.TextCtrl(self, value="output.txt", pos=(20, 190), size=(140,-1))
+
 
 
     def OnClickOpen(self,event):
@@ -130,7 +133,7 @@ class ExamplePanel(wx.Panel):
             seq = re.sub(r'\W', '', seq) #remove all spaces/blanks/newlines
             seq = re.sub('[^a-zA-Z]', '', seq)  #remove all non LETTER char
             seq = seq.upper()
-            self.logger.AppendText('Your chains first 20:\n %s \n' % seq[0:20])
+            self.logger.AppendText('Your chain\'s first 40:\n%s \n' % seq[0:40])
             
             
             
@@ -174,7 +177,7 @@ class ExamplePanel(wx.Panel):
                 
                 line_num = int(self.editline.GetValue())
 
-                fname = "new_chain.txt"
+                fname = self.editname.GetValue()
                 file = open(fname, 'w')
                 
                 
@@ -194,7 +197,7 @@ class ExamplePanel(wx.Panel):
                     line_num += 2
                 
                 file.close()
-                self.logger.AppendText('\nFinished! Results in new_chain.txt\n')
+                self.logger.AppendText('\nFinished! Results in '+fname+' \n')
         
         except:
             self.logger.AppendText("Not file loaded? \n") 
@@ -203,9 +206,10 @@ class ExamplePanel(wx.Panel):
     
     def OnClickExit(self,event):
         app.Destroy()
+        sys.exit()
 
 app = wx.App(False)
-frame = wx.Frame(None,0,'Chain Rep', size=(700,280))
+frame = wx.Frame(None,0,'Chain Rep', size=(775,320))
 panel = ExamplePanel(frame)
 frame.Show()
 app.MainLoop()
