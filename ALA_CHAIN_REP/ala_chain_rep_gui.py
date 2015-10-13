@@ -13,10 +13,6 @@ import os
 import sys
 
 
-
-#mystr = "I want to Remove all white \t spaces, new lines \n and tabs \t"
-#print re.sub(r"\W", "", mystr)
-
 bases = ['T', 'C', 'A', 'G']
 codons = [a+b+c for a in bases for b in bases for c in bases]
 amino_acids = 'FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
@@ -94,7 +90,7 @@ class ExamplePanel(wx.Panel):
 
 
         # the oligo num control
-        self.lbloligo = wx.StaticText(self, label="Length of oligos:", pos=(20, 20))
+        self.lbloligo = wx.StaticText(self, label="Length of primers:", pos=(20, 20))
         self.editoligo = wx.TextCtrl(self, value="7", pos=(20, 40), size=(140,-1))
 
         # the position control 
@@ -164,7 +160,7 @@ class ExamplePanel(wx.Panel):
                 if (oligo_num-3)%2 != 0 or (oligo_num-3) <= 0: 
                     self.logger.AppendText('Incorrect number of oligos, insert a correct one \n')
                 else:
-                    self.logger.AppendText('Number of oligos accepted \n')
+                    self.logger.AppendText('Length of primers accepted \n')
 
                     oligo_assert = True
                     side_num = (oligo_num-3)/2   
@@ -200,8 +196,8 @@ class ExamplePanel(wx.Panel):
                 self.logger.AppendText('\nFinished! Results in '+fname+' \n')
         
         except:
-            self.logger.AppendText("Not file loaded? \n") 
-            print "Unexpected error:", sys.exc_info()[0]
+            self.logger.AppendText('Not file loaded? \n') 
+            self.logger.AppendText('Unexpected error:'+ sys.exc_info()[0])
             
     
     def OnClickExit(self,event):
@@ -209,7 +205,7 @@ class ExamplePanel(wx.Panel):
         sys.exit()
 
 app = wx.App(False)
-frame = wx.Frame(None,0,'Chain Rep', size=(775,320))
+frame = wx.Frame(None,0,'Ala Chain Rep', size=(775,320))
 panel = ExamplePanel(frame)
 frame.Show()
 app.MainLoop()
