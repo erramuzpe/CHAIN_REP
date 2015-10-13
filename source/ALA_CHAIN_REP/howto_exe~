@@ -1,8 +1,0 @@
-https://milkator.wordpress.com/2014/07/19/windows-executable-from-python-developing-in-ubuntu/
-
-rm -r build
-rm -r dist
-rm test.spec
-pyinstaller  --onefile --windowed chain_rep.py 
-
-wine c:/Python27/Scripts/pyinstaller --onefile --windowed chain_rep.py 
