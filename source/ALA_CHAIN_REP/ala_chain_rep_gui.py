@@ -107,11 +107,8 @@ class ExamplePanel(wx.Panel):
 
 
 
-    def OnClickOpen(self,event):
-        global seq
-        
+    def OnClickOpen(self,event):        
         try:
-            
             """ Open a file"""
             dlg = wx.FileDialog(self, "Choose a file", self.dirname, "", "*.*", wx.OPEN)
             if dlg.ShowModal() == wx.ID_OK:
@@ -119,35 +116,31 @@ class ExamplePanel(wx.Panel):
                 self.dirname = dlg.GetDirectory()
                 f = open(os.path.join(self.dirname, self.filename), 'r')
                 #self.control.SetValue(f.read())
-                seq = f.read()
+                self.seq = f.read()
                 f.close()
             dlg.Destroy()
             self.logger.AppendText('File loaded! \n')   
              
              
             # seq initial treatment
-            seq = re.sub(r'\W', '', seq) #remove all spaces/blanks/newlines
-            seq = re.sub('[^a-zA-Z]', '', seq)  #remove all non LETTER char
-            seq = seq.upper()
-            self.logger.AppendText('Your chain\'s first 40:\n%s \n' % seq[0:40])
-            
-            
+            self.seq = re.sub(r'\W', '', self.seq) #remove all spaces/blanks/newlines
+            self.seq = re.sub('[^a-zA-Z]', '', self.seq)  #remove all non LETTER char
+            self.seq = self.seq.upper()
+            self.logger.AppendText('Your chain\'s first 40:\n%s \n' % self.seq[0:40])
             
         except: self.logger.AppendText("There was some problem opening the file \n")
         
 
     def OnClickRun(self,event):
-        global seq
-        
         try:        
             start_pos = int(self.editpos.GetValue())
             
             start_pos -= 1
-            self.logger.AppendText('You selected %s as your starting point \n' % seq[start_pos:start_pos+10])
+            self.logger.AppendText('You selected %s as your starting point \n' % self.seq[start_pos:start_pos+10])
 
-            seq=seq[start_pos:] #delete the rest of the chain
+            self.seq=self.seq[start_pos:] #delete the rest of the chain
             
-            self.logger.AppendText('Your chain now is %s ... \n' % seq[:10])
+            self.logger.AppendText('Your chain now is %s ... \n' % self.seq[:10])
             
             
                         
@@ -178,9 +171,9 @@ class ExamplePanel(wx.Panel):
                 
                 
                 self.logger.AppendText('\nProcessing...  \n')
-                for x_ in xrange(0, len(seq), 3):
+                for x_ in xrange(0, len(self.seq), 3):
                     
-                    chain = seq[x_: x_+oligo_num] 
+                    chain = self.seq[x_: x_+oligo_num] 
                       
                     if len(chain) != oligo_num: break
                     
