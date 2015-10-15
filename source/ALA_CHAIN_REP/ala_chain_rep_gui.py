@@ -13,17 +13,17 @@ import os
 import sys
 
 
-bases = ['T', 'C', 'A', 'G']
-codons = [a+b+c for a in bases for b in bases for c in bases]
-amino_acids = 'FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
-codon_table = dict(zip(codons, amino_acids))
-codon_change_to_V = {
-		"GCA" : "GTA",
-		"GCC" : "GTC",
-		"GCG" : "GTG",
-		"GCT" : "GTT"
-	}
-codon_change_to_A = { #GCA GCC GCG GCT
+BASES = ['T', 'C', 'A', 'G']
+CODONS = [a+b+c for a in BASES for b in BASES for c in BASES]
+AMINO_ACIDS = 'FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
+CODON_TABLE = dict(zip(CODONS, AMINO_ACIDS))
+CODON_CHANGE_TO_V = {
+        "GCA" : "GTA",
+        "GCC" : "GTC",
+        "GCG" : "GTG",
+        "GCT" : "GTT"
+    }
+CODON_CHANGE_TO_A = { #GCA GCC GCG GCT
     "TTT":"GCT", "TTC":"GCC", "TTA":"GCA", "TTG":"GCG",
     "TCT":"GCT", "TCC":"GCC", "TCA":"GCA", "TCG":"GCG",
     "TAT":"GCT", "TAC":"GCC", "TAA":"GCA", "TAG":"GCG",
@@ -39,177 +39,185 @@ codon_change_to_A = { #GCA GCC GCG GCT
     "GTT":"GCT", "GTC":"GCC", "GTA":"GCA", "GTG":"GCG",
     "GAT":"GCT", "GAC":"GCC", "GAA":"GCA", "GAG":"GCG",
     "GGT":"GCT", "GGC":"GCC", "GGA":"GCA", "GGG":"GCG"
-	}
- 
+    }
+COMPLEMENT = {'A':'T', 'C':'G', 'G':'C', 'T':'A', 'N':'N'}
 
-        
-def chain_rep(chain,start):
-    
-    global codon_table
-    
-    codon=chain[start:start+3]
-    if codon_table[codon] == 'A': #substitute for V
-        codon = codon_change_to_V[codon]
+def chain_rep(chain, start):
+    """
+    chain_rep
+    """
+    codon = chain[start:start+3]
+    if CODON_TABLE[codon] == 'A': #substitute for V
+        codon = CODON_CHANGE_TO_V[codon]
     else: #substitute for A
-        codon = codon_change_to_A[codon]
+        codon = CODON_CHANGE_TO_A[codon]
     chain = chain[:start] + codon + chain[start+3:]
     return chain
 
-def reverseComplement(seq):
-  sequence = seq*1
-  complement = {'A':'T','C':'G','G':'C','T':'A','N':'N'}
-  return "".join([complement.get(nt, '') for nt in sequence[::-1]])
-
-def format_chain(seq,start):
-    seq = seq[0:start]+" "+ \
-    " ".join(seq[i:i+3] for i in range(start, len(seq)-start, 3)) \
-    +" "+ seq[len(seq)-start:]
-    return seq
+def reverse_complement(chain):
+    """
+    reverse_complement
+    """
+    return "".join([COMPLEMENT.get(nt, '') for nt in chain[::-1]])
 
 
 #Main start
 class ExamplePanel(wx.Panel):
+    """
+    ExamplePanel
+    """
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        self.dirname=''
-
-        # A multiline TextCtrl - This is here to show how the events work in this program, don't pay too much attention to it
-        self.logger = wx.TextCtrl(self, pos=(340,20), size=(415,260), style=wx.TE_MULTILINE | wx.TE_READONLY)
-
+        self.dirname = ''
+        self.seq = ''
+        self.filename = ''
+        # A multiline TextCtrl - This is here to show how the events work
+        # in this program, don't pay too much attention to it
+        self.logger = wx.TextCtrl(self, pos=(340, 20), size=(415, 260), \
+        style=wx.TE_MULTILINE | wx.TE_READONLY)
         # Open button
-        self.buttonopen =wx.Button(self, label="Open", pos=(20, 250))
-        self.Bind(wx.EVT_BUTTON, self.OnClickOpen,self.buttonopen)
-        
+        self.buttonopen = wx.Button(self, label="Open", pos=(20, 250))
+        self.Bind(wx.EVT_BUTTON, self.on_click_open, self.buttonopen)
         # Run button
-        self.buttonrun =wx.Button(self, label="Run", pos=(110, 250))
-        self.Bind(wx.EVT_BUTTON, self.OnClickRun,self.buttonrun)
-        
+        self.buttonrun = wx.Button(self, label="Run", pos=(110, 250))
+        self.Bind(wx.EVT_BUTTON, self.on_click_run, self.buttonrun)
         # Exit button
-        self.buttonexit =wx.Button(self, label="Exit", pos=(200, 250))
-        self.Bind(wx.EVT_BUTTON, self.OnClickExit,self.buttonexit)
-
-
+        self.buttonexit = wx.Button(self, label="Exit", pos=(200, 250))
+        self.Bind(wx.EVT_BUTTON, self.on_click_exit, self.buttonexit)
         # the oligo num control
-        self.lbloligo = wx.StaticText(self, label="Length of primers:", pos=(20, 20))
-        self.editoligo = wx.TextCtrl(self, value="7", pos=(20, 40), size=(140,-1))
-
-        # the position control 
-        self.lblpos = wx.StaticText(self, label="Position you would like to start", pos=(20,70))
-        self.editpos = wx.TextCtrl(self, value="1", pos=(20, 90), size=(140,-1))
-        
+        self.lbloligo = wx.StaticText(self, label="Length of primers:", \
+        pos=(20, 20))
+        self.editoligo = wx.TextCtrl(self, value="7", \
+        pos=(20, 40), size=(140, -1))
+        # the position control
+        self.lblpos = wx.StaticText(self, \
+        label="Position you would like to start", pos=(20, 70))
+        self.editpos = wx.TextCtrl(self, value="1", \
+        pos=(20, 90), size=(140, -1))
         # the oligo num control
-        self.lblline = wx.StaticText(self, label="Line to start in the output:", pos=(20, 120))
-        self.editline = wx.TextCtrl(self, value="1", pos=(20, 140), size=(140,-1))
-
+        self.lblline = wx.StaticText(self, \
+        label="Line to start in the output:", pos=(20, 120))
+        self.editline = wx.TextCtrl(self, value="1", \
+        pos=(20, 140), size=(140, -1))
         # the oligo num control
-        self.lblname = wx.StaticText(self, label="Output's name:", pos=(20, 170))
-        self.editname = wx.TextCtrl(self, value="output.txt", pos=(20, 190), size=(140,-1))
+        self.lblname = wx.StaticText(self, \
+        label="Output's name:", pos=(20, 170))
+        self.editname = wx.TextCtrl(self, \
+        value="output.txt", pos=(20, 190), size=(140, -1))
 
 
-
-    def OnClickOpen(self,event):        
+    def on_click_open(self, event):
+        """ Open a file """
         try:
-            """ Open a file"""
-            dlg = wx.FileDialog(self, "Choose a file", self.dirname, "", "*.*", wx.OPEN)
+            dlg = wx.FileDialog(self, "Choose a file", \
+            self.dirname, "", "*.*", wx.OPEN)
+
             if dlg.ShowModal() == wx.ID_OK:
                 self.filename = dlg.GetFilename()
                 self.dirname = dlg.GetDirectory()
-                f = open(os.path.join(self.dirname, self.filename), 'r')
-                #self.control.SetValue(f.read())
-                self.seq = f.read()
-                f.close()
+                dum_file = open(os.path.join(self.dirname, self.filename), 'r')
+                self.seq = dum_file.read()
+                dum_file.close()
             dlg.Destroy()
-            self.logger.AppendText('File loaded! \n')   
-             
-             
+            self.logger.AppendText('File loaded! \n')
+
             # seq initial treatment
-            self.seq = re.sub(r'\W', '', self.seq) #remove all spaces/blanks/newlines
-            self.seq = re.sub('[^a-zA-Z]', '', self.seq)  #remove all non LETTER char
+            #remove all spaces/blanks/newlines
+            self.seq = re.sub(r'\W', '', self.seq)
+            #remove all non LETTER char
+            self.seq = re.sub('[^a-zA-Z]', '', self.seq)
             self.seq = self.seq.upper()
-            self.logger.AppendText('Your chain\'s first 40:\n%s \n' % self.seq[0:40])
-            
-        except: self.logger.AppendText("There was some problem opening the file \n")
-        
+            self.logger.AppendText('Your chain\'s first 40:\n%s \n' \
+            % self.seq[0:40])
 
-    def OnClickRun(self,event):
-        try:        
+        except:
+            self.logger.AppendText("There was some problem \
+        opening the file \n")
+
+
+    def on_click_run(self, event):
+        """ Main program """
+        try:
             start_pos = int(self.editpos.GetValue())
-            
-            start_pos -= 1
-            self.logger.AppendText('You selected %s as your starting point \n' % self.seq[start_pos:start_pos+10])
 
-            self.seq=self.seq[start_pos:] #delete the rest of the chain
-            
-            self.logger.AppendText('Your chain now is %s ... \n' % self.seq[:10])
-            
-            
-                        
-            
+            start_pos -= 1
+            self.logger.AppendText('You selected %s as your starting point \n'\
+            % self.seq[start_pos:start_pos+10])
+
+            self.seq = self.seq[start_pos:] #delete the rest of the chain
+
+            self.logger.AppendText('Your chain now is %s ... \n' \
+            % self.seq[:10])
+
+
+
+
             oligo_assert = False
             try:
                 oligo_num = int(self.editoligo.GetValue())
                 side_num = 0
-                
-                if (oligo_num-3)%2 != 0 or (oligo_num-3) <= 0: 
-                    self.logger.AppendText('Incorrect number of oligos, insert a correct one \n')
+
+                if (oligo_num-3)%2 != 0 or (oligo_num-3) <= 0:
+                    self.logger.AppendText('Incorrect number of oligos,\
+                    insert a correct one \n')
                 else:
                     self.logger.AppendText('Length of primers accepted \n')
 
                     oligo_assert = True
-                    side_num = (oligo_num-3)/2   
+                    side_num = (oligo_num-3) / 2
             except:
-                self.logger.AppendText( 'Insert a number, please \n')
+                self.logger.AppendText('Insert a number, please \n')
 
             if oligo_assert == True:
-                
-                #codon_num = (oligo_num - 3 - 2*side_num) / 2 / 3
-                
+
                 line_num = int(self.editline.GetValue())
 
                 fname = self.editname.GetValue()
-                file = open(fname, 'w')
-                
-                
+                dum_file = open(fname, 'w')
+
+
                 self.logger.AppendText('\nProcessing...  \n')
-                for x_ in xrange(0, len(self.seq), 3):
-                    
-                    chain = self.seq[x_: x_+oligo_num] 
-                      
-                    if len(chain) != oligo_num: break
-                    
-                    chain = chain_rep(chain,side_num)
-                    chain_rev = reverseComplement(chain)    
-                    
-                    file.write(str(line_num) + " " + chain + '\n')
-                    file.write(str(line_num+1) + " " + chain_rev + '\n \n')
-                    
+                for i in xrange(0, len(self.seq), 3):
+
+                    chain = self.seq[i: i+oligo_num]
+
+                    if len(chain) != oligo_num:
+                        break
+
+                    chain = chain_rep(chain, side_num)
+                    chain_rev = reverse_complement(chain)
+
+                    dum_file.write(str(line_num) + " " + chain + '\n')
+                    dum_file.write(str(line_num+1) + " " + chain_rev + '\n \n')
+
                     line_num += 2
-                
-                file.close()
+
+                dum_file.close()
                 self.logger.AppendText('\nFinished! Results in '+fname+' \n')
-        
+
         except:
-            self.logger.AppendText('Not file loaded? \n') 
+            self.logger.AppendText('Not file loaded? \n')
             self.logger.AppendText('Unexpected error:'+ sys.exc_info()[0])
-            
-    
-    def OnClickExit(self,event):
-        app.Destroy()
+
+
+    def on_click_exit(self, event):
+        """ Exit """
+        APP.Destroy()
         sys.exit()
 
-app = wx.App(False)
-frame = wx.Frame(None,0,'AlaChainRep', size=(775,320))
-panel = ExamplePanel(frame)
-frame.Show()
-app.MainLoop()
+APP = wx.App(False)
+FRAME = wx.Frame(None, 0, 'AlaChainRep', size=(775, 320))
+PANEL = ExamplePanel(FRAME)
+FRAME.Show()
+APP.MainLoop()
 
 
 
 
-        
-        
-        
-           
+
+
+
+
 
 
 
