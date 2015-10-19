@@ -62,7 +62,34 @@ def reverse_complement(chain):
 
 
 #Main start
-class ExamplePanel(wx.Panel):
+class MainWindow(wx.Frame):
+    def __init__(self, parent, title, size):
+        wx.Frame.__init__(self, parent, title=title, size=size)
+
+        # Setting up the menu.
+        filemenu= wx.Menu() 
+        menuAbout = filemenu.Append(wx.ID_ABOUT, '&About',' Information about this program')
+
+        # Creating the menubar.
+        menuBar = wx.MenuBar()
+        menuBar.Append(filemenu,'&File') # Adding the "filemenu" to the MenuBar
+        self.SetMenuBar(menuBar)  # Adding the MenuBar to the Frame content.
+
+        # Set events.
+        self.Bind(wx.EVT_MENU, self.OnAbout, menuAbout)
+        self.Show(True)
+
+    def OnAbout(self,e):
+        # A message dialog box with an OK button. wx.OK is a standard ID in wxWidgets.
+        dlg = wx.MessageDialog( self, 'AlaChainRep: Developed and maintained by\
+        Asier Erramuzpe \nSource code and contact info:\
+        \nhttp://erramuzpe.github.io/LAB_TOOLS', 'About AlaChainRep', wx.OK)
+        dlg.ShowModal() # Show it
+        dlg.Destroy() # finally destroy it when finished.
+
+
+
+class Panel(wx.Panel):
     """
     ExamplePanel
     """
@@ -70,47 +97,52 @@ class ExamplePanel(wx.Panel):
         wx.Panel.__init__(self, parent)
         self.dirname = ''
         self.seq = ''
-        self.filename = ''
+        self.filename = ''    
         # A multiline TextCtrl - This is here to show how the events work
         # in this program, don't pay too much attention to it
         self.logger = wx.TextCtrl(self, pos=(340, 20), size=(415, 260), \
         style=wx.TE_MULTILINE | wx.TE_READONLY)
         # Open button
-        self.buttonopen = wx.Button(self, label="Open", pos=(20, 250))
+        self.buttonopen = wx.Button(self, label='Open', pos=(20, 250))
         self.Bind(wx.EVT_BUTTON, self.on_click_open, self.buttonopen)
         # Run button
-        self.buttonrun = wx.Button(self, label="Run", pos=(110, 250))
+        self.buttonrun = wx.Button(self, label='Run', pos=(110, 250))
         self.Bind(wx.EVT_BUTTON, self.on_click_run, self.buttonrun)
         # Exit button
-        self.buttonexit = wx.Button(self, label="Exit", pos=(200, 250))
+        self.buttonexit = wx.Button(self, label='Exit', pos=(200, 250))
         self.Bind(wx.EVT_BUTTON, self.on_click_exit, self.buttonexit)
         # the oligo num control
-        self.lbloligo = wx.StaticText(self, label="Length of primers:", \
+        self.lbloligo = wx.StaticText(self, label='Length of primers:', \
         pos=(20, 20))
-        self.editoligo = wx.TextCtrl(self, value="7", \
+        self.editoligo = wx.TextCtrl(self, value='29', \
         pos=(20, 40), size=(140, -1))
         # the position control
         self.lblpos = wx.StaticText(self, \
-        label="Position you would like to start", pos=(20, 70))
-        self.editpos = wx.TextCtrl(self, value="1", \
+        label='Position you would like to start', pos=(20, 70))
+        self.editpos = wx.TextCtrl(self, value='1', \
         pos=(20, 90), size=(140, -1))
         # the oligo num control
         self.lblline = wx.StaticText(self, \
-        label="Line to start in the output:", pos=(20, 120))
-        self.editline = wx.TextCtrl(self, value="1", \
+        label='Number of first primer:', pos=(20, 120))
+        self.editline = wx.TextCtrl(self, value='1', \
         pos=(20, 140), size=(140, -1))
         # the oligo num control
         self.lblname = wx.StaticText(self, \
-        label="Output's name:", pos=(20, 170))
+        label='Output file name:', pos=(20, 170))
         self.editname = wx.TextCtrl(self, \
-        value="output.txt", pos=(20, 190), size=(140, -1))
-
+        value='output.txt', pos=(20, 190), size=(140, -1))
+        
+    def OnAbout(self,e):
+        """ A message dialog box with an OK button."""
+        dlg = wx.MessageDialog( self, 'A small text editor', 'About Sample Editor', wx.OK)
+        dlg.ShowModal() # Show it
+        dlg.Destroy() # finally destroy it when finished.    
 
     def on_click_open(self, event):
         """ Open a file """
         try:
-            dlg = wx.FileDialog(self, "Choose a file", \
-            self.dirname, "", "*.*", wx.OPEN)
+            dlg = wx.FileDialog(self, 'Choose a file', \
+            self.dirname, '', '*.*', wx.OPEN)
 
             if dlg.ShowModal() == wx.ID_OK:
                 self.filename = dlg.GetFilename()
@@ -127,12 +159,12 @@ class ExamplePanel(wx.Panel):
             #remove all non LETTER char
             self.seq = re.sub('[^a-zA-Z]', '', self.seq)
             self.seq = self.seq.upper()
-            self.logger.AppendText('Your chain\'s first 40:\n%s \n' \
-            % self.seq[0:40])
+            self.logger.AppendText('Your chain is:\n%s \n' \
+            % self.seq)
 
         except:
-            self.logger.AppendText("There was some problem \
-        opening the file \n")
+            self.logger.AppendText('There was some problem \
+        opening the file \n')
 
 
     def on_click_run(self, event):
@@ -141,7 +173,7 @@ class ExamplePanel(wx.Panel):
             start_pos = int(self.editpos.GetValue())
 
             start_pos -= 1
-            self.logger.AppendText('You selected %s as your starting point \n'\
+            self.logger.AppendText('\nYou selected %s as your starting point \n'\
             % self.seq[start_pos:start_pos+10])
 
             self.seq = self.seq[start_pos:] #delete the rest of the chain
@@ -204,26 +236,11 @@ class ExamplePanel(wx.Panel):
         """ Exit """
         APP.Destroy()
         sys.exit()
+        
+        
 
 APP = wx.App(False)
-FRAME = wx.Frame(None, 0, 'AlaChainRep', size=(775, 320))
-PANEL = ExamplePanel(FRAME)
+FRAME = MainWindow(None, 'AlaChainRep', size=(775, 350))
+PANEL = Panel(FRAME)
 FRAME.Show()
 APP.MainLoop()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
