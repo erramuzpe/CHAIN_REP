@@ -18,11 +18,11 @@ CODONS = [a+b+c for a in BASES for b in BASES for c in BASES]
 AMINO_ACIDS = 'FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
 CODON_TABLE = dict(zip(CODONS, AMINO_ACIDS))
 CODON_CHANGE_TO_V = {
-        "GCA" : "GTA",
-        "GCC" : "GTC",
-        "GCG" : "GTG",
-        "GCT" : "GTT"
-    }
+    "GCA" : "GTA",
+    "GCC" : "GTC",
+    "GCG" : "GTG",
+    "GCT" : "GTT"
+}
 CODON_CHANGE_TO_A = { #GCA GCC GCG GCT
     "TTT":"GCT", "TTC":"GCC", "TTA":"GCA", "TTG":"GCG",
     "TCT":"GCT", "TCC":"GCC", "TCA":"GCA", "TCG":"GCG",
