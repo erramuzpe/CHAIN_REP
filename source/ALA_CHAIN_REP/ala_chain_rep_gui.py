@@ -64,7 +64,7 @@ def reverse_complement(chain):
 #Main start
 class MainWindow(wx.Frame):
     def __init__(self, parent, title, size):
-        wx.Frame.__init__(self, parent, title=title, size=size)
+        wx.Frame.__init__(self, parent=parent, title=title, size=size)
 
         # Setting up the menu.
         filemenu= wx.Menu() 
@@ -93,8 +93,8 @@ class Panel(wx.Panel):
     """
     ExamplePanel
     """
-    def __init__(self, parent):
-        wx.Panel.__init__(self, parent)
+    def __init__(self, parent, size):
+        wx.Panel.__init__(self, parent, size=size)
         self.dirname = ''
         self.seq = ''
         self.filename = ''    
@@ -132,11 +132,6 @@ class Panel(wx.Panel):
         self.editname = wx.TextCtrl(self, \
         value='output.txt', pos=(20, 190), size=(140, -1))
         
-    def OnAbout(self,e):
-        """ A message dialog box with an OK button."""
-        dlg = wx.MessageDialog( self, 'A small text editor', 'About Sample Editor', wx.OK)
-        dlg.ShowModal() # Show it
-        dlg.Destroy() # finally destroy it when finished.    
 
     def on_click_open(self, event):
         """ Open a file """
@@ -169,67 +164,70 @@ class Panel(wx.Panel):
 
     def on_click_run(self, event):
         """ Main program """
-        try:
-            start_pos = int(self.editpos.GetValue())
-
-            start_pos -= 1
-            self.logger.AppendText('\nYou selected %s as your starting point \n'\
-            % self.seq[start_pos:start_pos+10])
-
-            self.seq = self.seq[start_pos:] #delete the rest of the chain
-
-            self.logger.AppendText('Your chain now is %s ... \n' \
-            % self.seq[:10])
-
-
-
-
-            oligo_assert = False
-            try:
-                oligo_num = int(self.editoligo.GetValue())
-                side_num = 0
-
-                if (oligo_num-3)%2 != 0 or (oligo_num-3) <= 0:
-                    self.logger.AppendText('Incorrect number of oligos,\
-                    insert a correct one \n')
-                else:
-                    self.logger.AppendText('Length of primers accepted \n')
-
-                    oligo_assert = True
-                    side_num = (oligo_num-3) / 2
-            except:
-                self.logger.AppendText('Insert a number, please \n')
-
-            if oligo_assert == True:
-
-                line_num = int(self.editline.GetValue())
-
-                fname = self.editname.GetValue()
-                dum_file = open(fname, 'w')
-
-
-                self.logger.AppendText('\nProcessing...  \n')
-                for i in xrange(0, len(self.seq), 3):
-
-                    chain = self.seq[i: i+oligo_num]
-
-                    if len(chain) != oligo_num:
-                        break
-
-                    chain = chain_rep(chain, side_num)
-                    chain_rev = reverse_complement(chain)
-
-                    dum_file.write(str(line_num) + " " + chain + '\n')
-                    dum_file.write(str(line_num+1) + " " + chain_rev + '\n \n')
-
-                    line_num += 2
-
-                dum_file.close()
-                self.logger.AppendText('\nFinished! Results in '+fname+' \n')
-
-        except:
+        if not self.seq:
             self.logger.AppendText('Not file loaded? \n')
-            self.logger.AppendText('Unexpected error:'+ sys.exc_info()[0])
+        else:    
+            try:
+                start_pos = int(self.editpos.GetValue())
+    
+                start_pos -= 1
+                self.logger.AppendText('\nYou selected %s as your starting point \n'\
+                % self.seq[start_pos:start_pos+10])
+    
+                self.seq = self.seq[start_pos:] #delete the rest of the chain
+    
+                self.logger.AppendText('Your chain now is %s ... \n' \
+                % self.seq[:10])
+    
+    
+    
+    
+                oligo_assert = False
+                try:
+                    oligo_num = int(self.editoligo.GetValue())
+                    side_num = 0
+    
+                    if (oligo_num-3)%2 != 0 or (oligo_num-3) <= 0:
+                        self.logger.AppendText('Incorrect number of oligos,\
+                        insert a correct one \n')
+                    else:
+                        self.logger.AppendText('Length of primers accepted \n')
+    
+                        oligo_assert = True
+                        side_num = (oligo_num-3) / 2
+                except:
+                    self.logger.AppendText('Insert a number, please \n')
+    
+                if oligo_assert == True:
+    
+                    line_num = int(self.editline.GetValue())
+    
+                    fname = self.editname.GetValue()
+                    dum_file = open(fname, 'w')
+    
+    
+                    self.logger.AppendText('\nProcessing...  \n')
+                    for i in xrange(0, len(self.seq), 3):
+    
+                        chain = self.seq[i: i+oligo_num]
+    
+                        if len(chain) != oligo_num:
+                            break
+    
+                        chain = chain_rep(chain, side_num)
+                        chain_rev = reverse_complement(chain)
+    
+                        dum_file.write(str(line_num) + " " + chain + '\n')
+                        dum_file.write(str(line_num+1) + " " + chain_rev + '\n \n')
+    
+                        line_num += 2
+    
+                    dum_file.close()
+                    self.logger.AppendText('\nFinished! Results in '+fname+' \n')
+    
+            except:
+                self.logger.AppendText('Not file loaded? \n')
+                self.logger.AppendText('Unexpected error:'+ sys.exc_info()[0])
 
 
     def on_click_exit(self, event):
@@ -241,6 +239,6 @@ class Panel(wx.Panel):
 
 APP = wx.App(False)
 FRAME = MainWindow(None, 'AlaChainRep', size=(775, 350))
-PANEL = Panel(FRAME)
+PANEL = Panel(FRAME, size=(775, 350))
 FRAME.Show()
 APP.MainLoop()
