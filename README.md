@@ -12,10 +12,10 @@
 
 ###  Using AlaChainRep:
 
-1. Click on “Download” (ZIP File of TAR Ball) to download the compressed file in your computer. Take into account that the output file with the mutagenic primers will be created in the folder where the AlaChainRep program is downloaded.
+1. Click on “Download” (ZIP File of TAR Ball) to download the compressed file in your computer. Take into account that the output file with the mutagenic primers will be created in the folder where the AlaChainRep program is opened.
 2. Open “exec” folder.
-3. Open “gnulinux” or “windows” folder depending on your computer configuration.
-4. Open AlaChainRep program.
+3. Open “gnulinux” or “windows” folder depending on your computer's Operative System.
+4. Run AlaChainRep program.
 5. Click “Open” and browse for the .txt file containing the nucleotide sequence to be mutagenized.
 6. Your nucleotide sequence (chain) is shown.  
 7. Define the length of the mutagenic primers (29 by default).
