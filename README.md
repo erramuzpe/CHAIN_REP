@@ -12,18 +12,20 @@
 
 ###  Using AlaChainRep:
 
-1. Click on “Download” (ZIP File of TAR Ball) to download the compressed file in your computer. Take into account that the output file with the mutagenic primers will be created in the folder where the AlaChainRep program is opened.
-2. Open “exec” folder.
-3. Open “gnulinux” or “windows” folder depending on your computer's Operative System.
-4. Run AlaChainRep program.
-5. Click “Open” and browse for the .txt file containing the nucleotide sequence to be mutagenized.
-6. Your nucleotide sequence (chain) is shown.  
-7. Define the length of the mutagenic primers (29 by default).
-8. Define the position from the chain at which you would like to start the designing of mutagenic primers. This position indicates the first nucleotide in the first mutagenic primer, and it will depend on the position on the chain of the first codon to be mutagenized and on the defined length of the mutagenic primers.
-9. Define the number of the first primer (1 by default).
-10. Define the name of the output file (output.txt by default).
-11. Click “Run”. 
-12. The list of mutagenic primers is displayed in a new .txt file created in the folder where the AlaChainRep program was opened.   
+1. Click on "Download" (ZIP File of TAR Ball) to download the compressed file in your computer. Take into account that the output file with the mutagenic primers will be created in the folder where the AlaChainRep program is opened. Open "exec" folder. Open “gnulinux” or "windows" folder depending on your computer's Operative System and execute the program double clicking on the icon.
+
+or 
+
+1. Select from "Downloads" your required version from https://github.com/erramuzpe/LAB_TOOLS/releases
+2. Run AlaChainRep program.
+3. Click "Open" and browse for the .txt file containing the nucleotide sequence to be mutagenized.
+4. Your nucleotide sequence (chain) is shown.  
+5. Define the length of the mutagenic primers (29 by default).
+6. Define the position from the chain at which you would like to start the designing of mutagenic primers. This position indicates the first nucleotide in the first mutagenic primer, and it will depend on the position on the chain of the first codon to be mutagenized and on the defined length of the mutagenic primers.
+7. Define the number of the first primer (1 by default).
+8. Define the name of the output file (output.txt by default).
+9. Click "Run". 
+10. The list of mutagenic primers is displayed in a new .txt file created in the folder where the AlaChainRep program was opened.   
 
 
 ---
