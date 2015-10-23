@@ -56,17 +56,13 @@ def reverse_complement(chain):
 @get('/')
 def index():
     return '''
-
         <form action="/run" method="post" enctype="multipart/form-data">
             <p>Start <input name="start" type="text" value="1" /></p>
             <p>Primer len <input name="primer" type="text" value="27" /></p>
             <p>Output line <input name="output_line" type="text" value="1" /></p>
-
-
           <input type="file" name="data" />
           <input name="RUN" type="submit" value="RUN" /></p>
         </form>
-
     '''
 
 
@@ -101,10 +97,9 @@ def do_upload():
         if (oligo_num-3)%2 != 0 or (oligo_num-3) <= 0:
             return "Incorrect number of oligos insert a correct one"
         else:
-            #self.logger.AppendText('Length of primers accepted \n')
             side_num = (oligo_num-3) / 2
     except:
-        return "Insert a number"
+        return "Unexpected error, data could not be adecuate"
 
 
     try:
@@ -124,11 +119,10 @@ def do_upload():
 
             line_num += 2
     except:
-        return "Insert a number"
+        return "Unexpected error, data could not be adecuate"
 
 
     return '''<p>%s''' % (dum_file)
 
 
 application = default_app()
-
