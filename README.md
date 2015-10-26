@@ -18,12 +18,13 @@ or
 
 1. Select from "Downloads" your required version from https://github.com/erramuzpe/LAB_TOOLS/releases
 
+ 
 2. Execute the program double clicking on the icon.
 3. Click "Open" and browse for the .txt file containing the nucleotide sequence to be mutagenized.
 4. Your nucleotide sequence (chain) is shown.  
 5. Define the length of the mutagenic primers (29 by default).
 6. Define the position from the chain at which you would like to start the designing of mutagenic primers (1 by
-default). This position indicates the first nucleotide in the first mutagenic primer, and it will depend on the position on the chain of the first codon to be mutagenized and on the defined length of the mutagenic primers (n+3+n,where 3 indicates the three nucleotides of the codon to be mutated and n defines the primer length)..
+default). This position indicates the first nucleotide in the first mutagenic primer, and it will depend on the position on the chain of the first codon to be mutagenized and on the defined length of the mutagenic primers (n+3+n, where 3 indicates the three nucleotides of the codon to be mutated and n defines the primer length).
 7. Define the number of the first primer (1 by default).
 8. Define the name of the output file (output.txt by default).
 9. Click "Run". 
