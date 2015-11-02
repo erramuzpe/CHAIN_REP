@@ -30,6 +30,9 @@ default). This position indicates the first nucleotide in the first mutagenic pr
 9. Click "Run". 
 10. The list of mutagenic primers is displayed in a new .txt file created in the folder where the AlaChainRep program was opened.   
 
+### On-line Beta Versión of AlaChainRep:
+
+Available for any OS and browser in https://erramuzpe.pythonanywhere.com/
 
 ---
 
