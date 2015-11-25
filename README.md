@@ -10,6 +10,10 @@
 - **Input**: the program accepts as input **.txt files** containing the cDNA sequence of interest, and ignores numbers, non-letter characters, spaces, or line breaks. The first letter in the .txt file is considered the first position from the chain (sequence to be mutagenized). Therefore, letter characters other than the nucleotides should be avoided in the file. The user defines where to start the design of primers by defining the position to start in the chain. 
 - **Output**: the program provides a new .txt file with a list of consecutively numbered mutagenic primers, forward and reverse, written 5’ to 3’. The numbering of the first forward mutagenic primer and the name of the .txt file can be defined by the user.
 
+### On-line Beta Versión of AlaChainRep:
+
+Available for any OS and browser in https://erramuzpe.pythonanywhere.com/
+
 ###  Using AlaChainRep:
 
 1. Click on "Download" (ZIP File of TAR Ball) to download the compressed file in your computer. Take into account that the output file with the mutagenic primers will be created in the folder where the AlaChainRep program is opened. Open "exec" folder. Open “gnulinux” or "windows" folder depending on your computer's Operative System. If you wish, save the program file (ala_chain_rep.exe) in the folder where you want to have the output file with the list of mutagenic primers.
